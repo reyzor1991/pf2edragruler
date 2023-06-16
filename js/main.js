@@ -1,5 +1,32 @@
 import {movementTracking} from "./movementFunctions.js"
 
+function conditionFacts(tokenConditions, conditionSlug) {
+	return tokenConditions.find(e => e.slug == conditionSlug)
+}
+
+//determines how many actions a token should start with.
+function actionCount(token) {
+    let num_actions = 3 //Set the base number of actions to the default 3.
+    const conditions = token.actor.conditions.filter(a=>a.active);
+
+    if (conditionFacts(conditions, "immobilized") || conditionFacts(conditions, "paralyzed")
+        || conditionFacts(conditions, "petrified") || conditionFacts(conditions, "unconscious")) {
+        return 0;
+    }
+    let stunned = conditionFacts(conditions, "stunned");
+    let slowed = conditionFacts(conditions, "slowed");
+    let quickened = conditionFacts(conditions, "quickened");
+    if (stunned || slowed) {
+            num_actions -= Math.max( (slowed?.value ?? 0), (stunned?.value ?? 0) )
+    }
+    if (quickened) {
+        num_actions += 1;
+    }
+
+    return num_actions < 0 ? 0 : num_actions
+};
+
+
 Hooks.once("init", () => {
 	//Wait until the game is initialized, then register the settings created previously.
 	game.settings.register("pf2e-dragruler", "offTurnMovement", {
@@ -24,7 +51,7 @@ Hooks.once("dragRuler.ready", (SpeedProvider) => {
 	  };
 	  // Get the distance for each movement interval to give to drag ruler
 	  getRanges(token){
-	  var numactions = 3; //Use the actionCount function to determine how many actions that token gets each round.
+	  var numactions = actionCount(token); //Use the actionCount function to determine how many actions that token gets each round.
 	  var movement = movementTracking(token); //Use the movementTracking function to get how far each movement range should be.
 	  const ranges = []; //create blank array to store the ranges in.
 
