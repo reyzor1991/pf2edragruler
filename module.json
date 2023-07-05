@@ -1,6 +1,6 @@
 {
   "title": "PF2e Drag Ruler Integration",
-  "version": "3.0.1",
+  "version": "3.0.3",
   "description": "Integration of Drag Ruler module (https://github.com/manuelVo/foundryvtt-drag-ruler) for Pathfinder 2e.",
   "compatibility":{
     "minimum": "11",
@@ -9,8 +9,12 @@
   },
   "authors":[
   {
+    "name":"Reyzor",
+    "discord": "reyzor1991"
+  },
+  {
     "name":"Avery",
-    "discord": "Avery#9136"
+    "discord": "celtois"
   }
 ],
   "media": [{
@@ -39,9 +43,9 @@
     }
   ],
   "socket": true,
-  "manifest": "https://raw.githubusercontent.com/League-of-Foundry-Developers/pf2edragruler/main/module.json",
-  "download": "https://github.com/League-of-Foundry-Developers/pf2edragruler/archive/refs/tags/v3.0.1.zip",
-  "url": "https://github.com/League-of-Foundry-Developers/pf2edragruler",
+  "manifest": "https://github.com/reyzor1991/pf2edragruler/releases/latest/download/module.json",
+  "download": "https://github.com/reyzor1991/pf2edragruler/releases/latest/download/pf2edragruler.zip",
+  "url": "https://github.com/reyzor1991/pf2edragruler",
   "id": "pf2e-dragruler",
   "relationships": {
     "systems": [

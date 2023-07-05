@@ -1,14 +1,14 @@
 function movementSpeed(token, type) {
 	//handles speeds for non vehicles
 	if (token.actor.type === "character" && type === 'land'){type = 'land-speed'}
-	if (token.actor.type !== "vehicle"){
-    let findSpeed = token?.actor?.system?.attributes?.speed?.otherSpeeds.find(e => e.type == type) ?? 0;
+	if (token.actor.type !== "vehicle") {
+        let findSpeed = token?.actor?.system?.attributes?.speed?.otherSpeeds.find(e => e.type == type) ?? 0;
 		if(findSpeed?.total !== undefined){
 			return {speed: findSpeed?.total > 0 ? findSpeed?.total : parseFloat(findSpeed?.breakdown?.match(/\d+(\.\d+)?/)[0]), type: type} //if a matching speed if found returns it.
-                } else if (token.actor.system.attributes?.speed?.total !== 0 && isNaN(token.actor.system.attributes?.speed?.total) == false){
+        } else if (token.actor.system.attributes?.speed?.total !== 0 && isNaN(token.actor.system.attributes?.speed?.total) == false){
 			//If the speed in question wasn't found above, and the speed total isn't 0 (happens to some npcs who's speed is stored in value instead) returns the speed total. And the type, for NPCs that may be set as something other than land.
 			return {speed: parseFloat(token.actor.system.attributes?.speed?.total) ??  0, type: token.actor.system.attributes?.speed?.type ?? 'default' }
-		}	else {
+		} else {
 			return {speed:Math.max([parseFloat(token.actor.system.attributes?.speed?.breakdown?.match(/\d+(\.\d+)?/)[0]), parseFloat(token.actor.system.attributes?.speed?.otherSpeeds[0]?.total), 0].filter(Number)), type: 'special' } //pulls out the speed for the value string in the event that the total was 0. In the event that both the total and value for the land speed are 0, falls back on the first other speed total, should one not exist speed will be 0.
 		};
 		//handles speeds for vehicles because they're different.
@@ -19,7 +19,15 @@ function movementSpeed(token, type) {
 
 //This function handles determining the type of movment.
 function getMovementType(token){
-var movementType = 'land';
+    var movementType = 'land';
+
+    const tokenElevation = token?.document?.elevation; //Gives us a way to check if a token is flying
+    //This logic gate handles flight, burrowing and swimming, if the automatic movment switching is on.
+    if (game.settings.get("pf2e-dragruler", "auto")) {
+        if(tokenElevation > 0) {var movementType = 'fly'}; //if elevated fly
+        if (tokenElevation < 0){var movementType = 'burrow'}; //if below ground burrow.
+    };
+
   if(token.actor.flags.pf2e?.movement?.burrowing === true){var movementType = 'burrow'} //switches to burrowing if the burrow effect is applied to the actor.
   if(token.actor.flags.pf2e?.movement?.climbing === true){var movementType = 'climb'} //switches to climbing if the climb effect is applied to the actor.
   if(token.actor.flags.pf2e?.movement?.swimming === true){var movementType = 'swim'} //switches to swimming if the swim effect is applied to the actor.

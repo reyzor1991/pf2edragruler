@@ -30,13 +30,21 @@ function actionCount(token) {
 Hooks.once("init", () => {
 	//Wait until the game is initialized, then register the settings created previously.
 	game.settings.register("pf2e-dragruler", "offTurnMovement", {
-	name: game.i18n.localize("pf2e-dragruler.settings.offTurnMovement.name"),
-	hint: game.i18n.localize("pf2e-dragruler.settings.offTurnMovement.hint"),
-	scope: "world",
-	config: true,
-	type: Boolean,
-	default: false
-})
+        name: game.i18n.localize("pf2e-dragruler.settings.offTurnMovement.name"),
+        hint: game.i18n.localize("pf2e-dragruler.settings.offTurnMovement.hint"),
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: false
+    })
+    game.settings.register("pf2e-dragruler", "auto", {
+		name: "Automatic Movement Switching",
+		hint: "If enabled, positive elevations will automatically use fly speed, negative elevations will use burrow, and tokens in water or aquatic terrain will use swim speeds, if an actor does not have that speed, it will instead use their land speed.",
+		scope: "world",
+		config: true,
+		type: Boolean,
+		default: false
+    })
 });
 Hooks.once("dragRuler.ready", (SpeedProvider) => {
 	class PF2eSpeedProvider extends SpeedProvider {
