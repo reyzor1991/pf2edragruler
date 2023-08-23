@@ -40,6 +40,12 @@
       "name": "English",
       "path": "lang/en.json",
       "flags": {}
+    },
+    {
+      "lang": "cn",
+      "name": "简体中文",
+      "path": "lang/cn.json",
+      "flags": {}
     }
   ],
   "socket": true,
