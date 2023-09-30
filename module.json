@@ -65,7 +65,7 @@
 			{
 				"id": "drag-ruler",
 				"type": "module",
-				"manifest": "https://raw.githubusercontent.com/manuelVo/foundryvtt-drag-ruler/v1.13.5/module.json"
+				"manifest": "https://raw.githubusercontent.com/manuelVo/foundryvtt-drag-ruler/develop/module.json"
 			}
 		]
   }
