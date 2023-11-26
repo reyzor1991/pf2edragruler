@@ -38,8 +38,8 @@ function getMovementType(token){
 
 	//This logic gate handles flight and swimming, if the scene environment based movement switching is on.
 	if (game.settings.get("pf2e-dragruler", "scene") === true && game.modules.get("enhanced-terrain-layer")?.active) {
-		if(canvas.scene.getFlag('enhanced-terrain-layer', 'environment') === 'sky') {var movementType = 'fly'}; //checks if the scene is set to have a default environment of sky. If so, uses fly speed.
-		if(canvas.scene.getFlag('enhanced-terrain-layer', 'environment') === 'aquatic'){var movementType = 'swim'}; //checks if the scene is set to have a default environment of aquatic. If so, uses swim speed.
+		if(canvas.scene.getFlag('enhanced-terrain-layer', 'environment') === 'sky') { movementType = 'fly'}; //checks if the scene is set to have a default environment of sky. If so, uses fly speed.
+		if(canvas.scene.getFlag('enhanced-terrain-layer', 'environment') === 'aquatic'){ movementType = 'swim'}; //checks if the scene is set to have a default environment of aquatic. If so, uses swim speed.
 	};
 
     if(token.actor.flags.pf2e?.movement?.burrowing === true){ movementType = 'burrow'} //switches to burrowing if the burrow effect is applied to the actor.

@@ -45,6 +45,14 @@ Hooks.once("init", () => {
 		type: Boolean,
 		default: false
     })
+    game.settings.register("pf2e-dragruler", "scene", {
+        name: game.i18n.localize("pf2e-dragruler.settings.scene.name"),
+        hint: game.i18n.localize("pf2e-dragruler.settings.scene.hint"),
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: false
+    })
 });
 Hooks.once("dragRuler.ready", (SpeedProvider) => {
 	class PF2eSpeedProvider extends SpeedProvider {
