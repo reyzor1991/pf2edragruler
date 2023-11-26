@@ -93,3 +93,63 @@ Hooks.on('updateCombat', () => {
 		};
  };
 });
+
+Hooks.once("enhancedTerrainLayer.ready", (RuleProvider) => {
+    class PF2eRuleProvider extends RuleProvider {
+        calculateCombinedCost(terrain, options) {
+            const token = options?.token;
+            const tokenElevation = token?.document?.elevation || 0
+
+            let cost;
+            if (token) {
+                var movementType = movementTracking(token).type; //gets type of movement.
+                //gets token elevation.
+                var ignoredEnv= Object.keys(token.actor.flags.pf2e?.movement?.env?.ignore || {any: false} ).filter(a => token.actor.flags.pf2e?.movement?.env?.ignore?.[a]);  //finds all the flags set by effects asking the actor to ignore a type of terrain.
+                var reducedEnv= Object.keys(token.actor.flags.pf2e?.movement?.env?.reduce || {any: false} ).filter(a => token.actor.flags.pf2e?.movement?.env?.reduce?.[a]); //finds all the flags set by effects asking the actor to reduce the cost of a type of terrain.
+                if (token.actor.flags.pf2e?.movement?.ignoreTerrain|| token.actor.flags.pf2e?.movement?.climbing){
+                    cost = 1
+                    return cost
+                };
+            }
+            //Function for Minus Equal, minimum 1.
+            function mem1(a, value) {
+                return a <= value ? 1 : (a - value)
+            }
+
+            let environments = [];
+            let costs = [];
+            for(var ii = 0; ii<terrain.length; ii++) {
+                if ((token?.actor?.alliance ?? "none" !== (terrain[ii].object?.actor?.alliance ?? 0))){
+
+                    let etl = terrain[ii].flags['enhanced-terrain-layer'];
+
+
+                    environments.push(etl.environment)
+                    costs.push(etl.cost)
+                    if(token && !token.actor.flags.pf2e?.movement?.respectTerrain){
+                        if(reducedEnv?.find(e => e == 'non-magical') && (environments[ii] !== 'magical')){
+                            costs[ii] = mem1(costs[ii],1)
+                        }
+                        if(ignoredEnv?.find(e => e == 'non-magical') && (environments[ii] !== 'magical')){
+                            costs[ii] = 1
+                        }
+                    }
+                }
+            }
+            // Calculate the cost for this terrain
+            if (token && !token.actor.flags.pf2e?.movement?.respectTerrain){
+                for(var i = 0; i < environments.length; i++){
+                    if(reducedEnv?.find(e => e == environments[i])||token.actor.flags.pf2e?.movement?.reduceTerrain){costs[i] = mem1(costs[i],1)}
+                    if(ignoredEnv?.find(e => e == environments[i])){costs[i]=1}
+                    if (movementType == 'swim' && environments[i] == "water") {costs[i]=1}
+                    if (movementType == 'burrow' && environments[i] == "underground"){costs[i]=1}
+                }
+            }
+            costs.push(1);
+            cost = Math.max(...costs)
+            if(token && token.actor.flags.pf2e?.movement?.increaseTerrain){cost += 1}
+            return cost;
+        }
+    }
+    enhancedTerrainLayer.registerModule("pf2e-dragruler", PF2eRuleProvider);
+});

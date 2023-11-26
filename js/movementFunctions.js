@@ -19,21 +19,35 @@ function movementSpeed(token, type) {
 
 //This function handles determining the type of movment.
 function getMovementType(token){
-    var movementType = 'land';
+    let movementType = 'land';
 
     const tokenElevation = token?.document?.elevation; //Gives us a way to check if a token is flying
     //This logic gate handles flight, burrowing and swimming, if the automatic movment switching is on.
     if (game.settings.get("pf2e-dragruler", "auto")) {
-        if(tokenElevation > 0) {var movementType = 'fly'}; //if elevated fly
-        if (tokenElevation < 0){var movementType = 'burrow'}; //if below ground burrow.
+        if(tokenElevation > 0) {movementType = 'fly'}; //if elevated fly
+        if (tokenElevation < 0){movementType = 'burrow'}; //if below ground burrow.
+        if (game.modules.get("enhanced-terrain-layer")?.active){
+            let ter = canvas.terrain.terrainFromPixels(token.document.x, token.document.y)[0]
+            if (ter) {
+                if (['aquatic','water'].includes(ter.flags['enhanced-terrain-layer'].environment)) {
+                    movementType = 'swim'
+                }
+            }
+        }
     };
 
-  if(token.actor.flags.pf2e?.movement?.burrowing === true){var movementType = 'burrow'} //switches to burrowing if the burrow effect is applied to the actor.
-  if(token.actor.flags.pf2e?.movement?.climbing === true){var movementType = 'climb'} //switches to climbing if the climb effect is applied to the actor.
-  if(token.actor.flags.pf2e?.movement?.swimming === true){var movementType = 'swim'} //switches to swimming if the swim effect is applied to the actor.
-  if(token.actor.flags.pf2e?.movement?.flying === true){var movementType = 'fly'} //switches to flying if the fly effect is applied to the actor.
-  if(token.actor.flags.pf2e?.movement?.walking === true){var movementType = 'land'}
-return movementType;
+	//This logic gate handles flight and swimming, if the scene environment based movement switching is on.
+	if (game.settings.get("pf2e-dragruler", "scene") === true && game.modules.get("enhanced-terrain-layer")?.active) {
+		if(canvas.scene.getFlag('enhanced-terrain-layer', 'environment') === 'sky') {var movementType = 'fly'}; //checks if the scene is set to have a default environment of sky. If so, uses fly speed.
+		if(canvas.scene.getFlag('enhanced-terrain-layer', 'environment') === 'aquatic'){var movementType = 'swim'}; //checks if the scene is set to have a default environment of aquatic. If so, uses swim speed.
+	};
+
+    if(token.actor.flags.pf2e?.movement?.burrowing === true){ movementType = 'burrow'} //switches to burrowing if the burrow effect is applied to the actor.
+    if(token.actor.flags.pf2e?.movement?.climbing === true){ movementType = 'climb'} //switches to climbing if the climb effect is applied to the actor.
+    if(token.actor.flags.pf2e?.movement?.swimming === true){ movementType = 'swim'} //switches to swimming if the swim effect is applied to the actor.
+    if(token.actor.flags.pf2e?.movement?.flying === true){ movementType = 'fly'} //switches to flying if the fly effect is applied to the actor.
+    if(token.actor.flags.pf2e?.movement?.walking === true){ movementType = 'land'}
+    return movementType;
 }
 
 //This function handles tracking how far a token has moved, allowing for drag ruler to consider movements less than a full movement speed as complete.
