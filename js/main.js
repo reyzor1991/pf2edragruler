@@ -154,9 +154,44 @@ Hooks.once("enhancedTerrainLayer.ready", (RuleProvider) => {
                 }
             }
             costs.push(1);
-            cost = Math.max(...costs)
-            if(token && token.actor.flags.pf2e?.movement?.increaseTerrain){cost += 1}
-            return cost;
+
+            let calculate = options.calculate || "maximum";
+            let calculateFn;
+            if (typeof calculate == "function") {
+                calculateFn = calculate;
+            } else {
+                switch (calculate) {
+                    case "maximum":
+                        calculateFn = function (cost, total) {
+                            return Math.max(cost, total);
+                        };
+                        break;
+                    case "additive":
+                        calculateFn = function (cost, total) {
+                            return cost + total;
+                        };
+                    case "multiple":
+                        calculateFn = function (cost, total) {
+                            return cost * (total ?? 1);
+                        };
+                        break;
+                    default:
+                        throw new Error(i18n("EnhancedTerrainLayer.ErrorCalculate"));
+                }
+            }
+
+            if (Number.isNumeric(canvas.scene.getFlag('enhanced-terrain-layer', 'cost')) && Number(canvas.scene.getFlag('enhanced-terrain-layer', 'cost'))) {
+                costs.push(canvas.scene.getFlag('enhanced-terrain-layer', 'cost'))
+            }
+
+            let total = null;
+            for (const t of costs) {
+                if (typeof calculateFn == "function") {
+                    total = calculateFn(t, total);
+                }
+            }
+            if(token && token.actor.flags.pf2e?.movement?.increaseTerrain){total += 1}
+            return total ?? 1;
         }
     }
     enhancedTerrainLayer.registerModule("pf2e-dragruler", PF2eRuleProvider);
