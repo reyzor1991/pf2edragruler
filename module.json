@@ -20,7 +20,7 @@
   "media": [{
         "type": "setup",
         "caption": "PF2E Drag Ruler",
-        "thumbnail": "/modules/pf2e-dragruler/thumbnail.webp"
+        "thumbnail": "modules/pf2e-dragruler/thumbnail.webp"
   }],
   "packs": [
     {
