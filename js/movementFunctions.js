@@ -2,7 +2,7 @@ function movementSpeed(token, type) {
 	//handles speeds for non vehicles
 	if (token.actor.type === "character" && type === 'land'){type = 'land-speed'}
 	if (token.actor.type !== "vehicle") {
-        let findSpeed = token?.actor?.system?.attributes?.speed?.otherSpeeds.find(e => e.type == type) ?? 0;
+        let findSpeed = token?.actor?.system?.attributes?.speed?.otherSpeeds?.find(e => e.type == type) ?? 0;
 		if(findSpeed?.total !== undefined){
 			return {speed: findSpeed?.total > 0 ? findSpeed?.total : parseFloat(findSpeed?.breakdown?.match(/\d+(\.\d+)?/)[0]), type: type} //if a matching speed if found returns it.
         } else if (token.actor.system.attributes?.speed?.total !== 0 && isNaN(token.actor.system.attributes?.speed?.total) == false){
