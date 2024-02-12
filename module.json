@@ -1,27 +1,29 @@
 {
   "title": "PF2e Drag Ruler Integration",
-  "version": "3.0.8",
+  "version": "3.0.9",
   "description": "Integration of Drag Ruler module (https://github.com/manuelVo/foundryvtt-drag-ruler) for Pathfinder 2e.",
-  "compatibility":{
+  "compatibility": {
     "minimum": "11",
     "verified": "11.315",
     "maximum": "11"
   },
-  "authors":[
-  {
-    "name":"Reyzor",
-    "discord": "reyzor1991"
-  },
-  {
-    "name":"Avery",
-    "discord": "celtois"
-  }
-],
-  "media": [{
-        "type": "setup",
-        "caption": "PF2E Drag Ruler",
-        "thumbnail": "modules/pf2e-dragruler/thumbnail.webp"
-  }],
+  "authors": [
+    {
+      "name": "Reyzor",
+      "discord": "reyzor1991"
+    },
+    {
+      "name": "Avery",
+      "discord": "celtois"
+    }
+  ],
+  "media": [
+    {
+      "type": "setup",
+      "caption": "PF2E Drag Ruler",
+      "thumbnail": "modules/pf2e-dragruler/thumbnail.webp"
+    }
+  ],
   "packs": [
     {
       "name": "movement-types",
@@ -33,7 +35,9 @@
       "flags": {}
     }
   ],
-  "esmodules": ["js/main.js"],
+  "esmodules": [
+    "js/main.js"
+  ],
   "languages": [
     {
       "lang": "en",
@@ -62,11 +66,11 @@
       }
     ],
     "requires": [
-			{
-				"id": "drag-ruler",
-				"type": "module",
-				"manifest": "https://raw.githubusercontent.com/manuelVo/foundryvtt-drag-ruler/develop/module.json"
-			}
-		]
+      {
+        "id": "drag-ruler",
+        "type": "module",
+        "manifest": "https://raw.githubusercontent.com/manuelVo/foundryvtt-drag-ruler/develop/module.json"
+      }
+    ]
   }
 }

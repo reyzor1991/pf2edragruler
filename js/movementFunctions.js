@@ -28,7 +28,7 @@ function getMovementType(token){
         if (tokenElevation < 0){movementType = 'burrow'}; //if below ground burrow.
         if (game.modules.get("enhanced-terrain-layer")?.active){
             let ter = canvas.terrain.terrainFromPixels(token.document.x, token.document.y)[0]
-            if (ter) {
+            if (ter && !(ter instanceof TokenDocument)) {
                 if (['aquatic','water'].includes(ter.flags['enhanced-terrain-layer'].environment)) {
                     movementType = 'swim'
                 }
@@ -51,7 +51,7 @@ function getMovementType(token){
 }
 
 //This function handles tracking how far a token has moved, allowing for drag ruler to consider movements less than a full movement speed as complete.
-export function movementTracking (token){
+export function movementTracking(token){
   const movementType = getMovementType(token);
 	const baseSpeed = movementSpeed(token, movementType).speed; //gets the base speed for the token, based on current movement type.
 	var usedActions = 0;
