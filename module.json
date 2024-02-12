@@ -1,6 +1,6 @@
 {
   "title": "PF2e Drag Ruler Integration",
-  "version": "3.0.7",
+  "version": "3.0.8",
   "description": "Integration of Drag Ruler module (https://github.com/manuelVo/foundryvtt-drag-ruler) for Pathfinder 2e.",
   "compatibility":{
     "minimum": "11",

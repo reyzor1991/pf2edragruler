@@ -130,10 +130,13 @@ Hooks.once("enhancedTerrainLayer.ready", (RuleProvider) => {
                 if ((token?.actor?.alliance ?? "none" !== (terrain[ii].object?.actor?.alliance ?? 0))){
 
                     let etl = terrain[ii].flags['enhanced-terrain-layer'];
+                    if (etl) {
+                        environments.push(etl.environment)
+                        costs.push(etl.cost)
+                    } else {
+                        costs.push(2)
+                    }
 
-
-                    environments.push(etl.environment)
-                    costs.push(etl.cost)
                     if(token && !token.actor.flags.pf2e?.movement?.respectTerrain){
                         if(reducedEnv?.find(e => e == 'non-magical') && (environments[ii] !== 'magical')){
                             costs[ii] = mem1(costs[ii],1)
